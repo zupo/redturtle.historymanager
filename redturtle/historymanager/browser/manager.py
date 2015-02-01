@@ -223,7 +223,15 @@ class PurgeInPathView(Manager):
         portal_type = self.request.get('portal_type', '')
         max_modified = {'query': self.get_date_limit(),
                         'range': 'max'}
-        brains = pc(path=path, portal_type=portal_type, modified=max_modified)
+                        
+        query = {
+            'path': path,
+            'modified': max_modified,
+        }
+        if portal_type:
+            query['portal_type'] = portal_type
+
+        brains = pc(**query)
         return [self.dereference(brain.getObject())[1]
                 for brain in brains]
 
